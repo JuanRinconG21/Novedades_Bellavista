@@ -28,6 +28,7 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) && isset($_POST['pass'])
     }
    
 }else{
-    echo "VACIOOO";
+    $_SESSION['error'] = "No deje Campos Vacios";
+        header("Location: ../index.php"); 
 }
 ?>
