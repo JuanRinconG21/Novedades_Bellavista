@@ -1,10 +1,9 @@
 <?php
 session_start();
-
 include("../model/MySQL.php");
 $conexion = new MySQL();
 $pdo = $conexion->conectar();
-$sql = "SELECT usuarios.idUsuarios, usuarios.nombre, usuarios.apellido, usuarios.telefono, cargos.descripcion as 'cargo' FROM usuarios INNER JOIN cargos ON usuarios.Cargos_idCargos=cargos.idCargos";
+$sql = "SELECT usuarios.idUsuarios, usuarios.nombre, usuarios.apellido, usuarios.telefono,cargos.idCargos, cargos.descripcion as 'cargo' FROM usuarios INNER JOIN cargos ON usuarios.Cargos_idCargos=cargos.idCargos WHERE usuarios.estado=0";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -78,7 +77,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     ?>
     <script>
-    function eliminarEmpleado(id) {
+    function eliminarEmpleados(id) {
         Swal.fire({
             title: `¿ Deseas Eliminar El Empleado #${id} ?`,
             showDenyButton: true,
@@ -94,7 +93,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     function ejecutarControladorEliminar(id) {
         // Realizar una solicitud AJAX a tu controlador de eliminación en PHP
         $.ajax({
-            url: '../controller/eliminarProveedor.php', // Ajusta la ruta a tu controlador PHP
+            url: '../controller/eliminarEmpleado.php', // Ajusta la ruta a tu controlador PHP
             method: 'POST', // O el método que estés utilizando en tu controlador PHP
             data: {
                 id: id
@@ -112,6 +111,32 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         });
     }
+
+    function select(id, e) {
+        // Obtener el id del valor que deseas preseleccionar
+
+        // Aquí debes poner el valor deseado
+        e.preventDefault()
+        let idValorPCreseleccionado = ""
+        idValorPCreseleccionado = id
+        // Obtener el elemento select
+        var miSelect = document
+            .getElementById(
+                "idSelect");
+        let largo = miSelect.options.length
+        let final = 0
+        console.log(miSelect.options)
+        // Iterar sobre las opciones y seleccionar la que coincida con el id
+        for (var i = 0; i <
+            largo; i++) {
+            if (miSelect.options[i].value == idValorPCreseleccionado) {
+                final = i
+                break
+            }
+        }
+        miSelect.options[final].selected = true
+
+    };
     </script>
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
@@ -129,7 +154,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="card card-primary">
                                     <!-- /.card-header -->
                                     <!-- form start -->
-                                    <form method="post" action="../controller/agregarProveedor.php">
+                                    <form method="post" action="../controller/agregarEmpleado.php">
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula:</label>
@@ -153,7 +178,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </div>
                                             <div class="form-group">
                                                 <label for="idCargo">Cargo:</label>
-                                                <select class="form-control" id="idCargo" name="idCargo" required>
+                                                <select class="form-control" name="idCargo" required>
                                                     <?php
                                                     $sql2 = "SELECT * FROM cargos WHERE estado=0";
                                                     $stmt2 = $pdo->prepare($sql2);
@@ -415,7 +440,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td><a class="btn btn-danger"
                                                 onclick="eliminarEmpleados(<?php echo $key['idUsuarios'] ?>)"><i
                                                     class="fas fa-trash-alt"></i></a> </td>
-                                        <td><a class="btn btn-warning" data-toggle="modal"
+                                        <td><a onclick="select(<?php echo $key['idCargos'] ?>,event)"
+                                                class="btn btn-warning" data-toggle="modal"
                                                 data-target="#modal-default<?php echo $key['idUsuarios'] ?>"><i
                                                     class="fas fa-edit"></i></a> </td>
                                         <div class="modal fade" id="modal-default<?php echo $key['idUsuarios'] ?>">
@@ -423,7 +449,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h2 class="modal-title" style="font-weight: bold;">Editar
-                                                            Especialidad
+                                                            Empleado
                                                         </h2>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
@@ -438,17 +464,66 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- /.card-header -->
                                                                         <!-- form start -->
                                                                         <form method="post"
-                                                                            action="../controller/editarProveedor.php">
+                                                                            action="../controller/editarEmpleado.php">
                                                                             <div class="card-body">
                                                                                 <div class="form-group">
-                                                                                    <input type="text" name="proveedor"
-                                                                                        value="<?php echo $key['nombre'] ?>"
-                                                                                        class="form-control"
-                                                                                        placeholder="Ingrese El Proveedor"
-                                                                                        required>
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-warning mt-3">Editar</button>
+                                                                                    <label for="cedula">Cédula:</label>
+                                                                                    <input type="number" min="1"
+                                                                                        class="form-control" id="cedula"
+                                                                                        name="cedula" required readonly
+                                                                                        value="<?php echo $key['idUsuarios'] ?>">
                                                                                 </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="nombre">Nombre:</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="nombre"
+                                                                                        name="nombre"
+                                                                                        value="<?php echo $key['nombre'] ?>"
+                                                                                        required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="apellido">Apellido:</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="apellido" name="apellido"
+                                                                                        required
+                                                                                        value="<?php echo $key['apellido'] ?>">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="telefono">Teléfono:</label>
+                                                                                    <input type="tel"
+                                                                                        class="form-control"
+                                                                                        id="telefono" name="telefono"
+                                                                                        required
+                                                                                        value="<?php echo $key['telefono'] ?>">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="idCargo">Cargo:</label>
+                                                                                    <select class="form-control"
+                                                                                        id="idSelect" name="idCargo"
+                                                                                        required>
+                                                                                        <?php
+                                                    $sql2 = "SELECT * FROM cargos WHERE estado=0";
+                                                    $stmt2 = $pdo->prepare($sql2);
+                                                    $stmt2->execute();
+                                                    $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                                                    foreach ($fila2 as $key) {
+                                                    ?>
+                                                                                        <!-- Aquí puedes insertar opciones dinámicamente desde tu base de datos o definirlas manualmente -->
+                                                                                        <option
+                                                                                            value="<?php echo $key['idCargos'] ?>">
+                                                                                            <?php echo $key['descripcion'] ?>
+                                                                                        </option>
+                                                                                        <?php
+                                                    }
+                                                    ?>
+                                                                                        <!-- Agrega más opciones según sea necesario -->
+                                                                                    </select>
+                                                                                </div>
+                                                                                <button type=" submit"
+                                                                                    class="btn btn-success">Agregar</button>
                                                                             </div>
                                                                         </form>
                                                                     </div>
@@ -471,8 +546,11 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Identificador</th>
-                                        <th>Descripcion</th>
+                                        <th>Cedula</th>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                        <th>Cargo</th>
+                                        <th>Telefono</th>
                                         <th>Eliminar</th>
                                         <th>Editar</th>
                                     </tr>
@@ -483,6 +561,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <!-- /.row (main row) -->
                 </div><!-- /.container-fluid -->
+
             </section>
             <!-- /.content -->
         </div>

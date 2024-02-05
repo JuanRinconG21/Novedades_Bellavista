@@ -3,10 +3,11 @@ session_start();
 if (isset($_POST['proveedor']) && !empty($_POST['proveedor'])) {
     try {
     $proveedor = $_POST['proveedor'];
+    $idproveedor = $_POST['idProveedor'];
     include('../model/MySQL.php');
     $conexion = new MySQL();
     $pdo = $conexion->conectar();
-    $sql = "UPDATE proveedor SET nombre=:proveedor WHERE ";
+    $sql = "UPDATE proveedor SET nombre=:proveedor WHERE idProveedor=:id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':proveedor', strtoupper($proveedor), PDO::PARAM_STR);
     $stmt->execute();

@@ -7,9 +7,10 @@ if (isset($_POST['especialidad']) && !empty($_POST['especialidad'])) {
     include('../model/MySQL.php');
     $conexion = new MySQL();
     $pdo = $conexion->conectar();
-    $sql = "UPDATE especialidad SET descripcion=:especialidad WHERE";
+    $sql = "UPDATE especialidad SET descripcion=:especialidad WHERE idEspecialidad=:id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':especialidad', strtoupper($especialidad), PDO::PARAM_STR);
+    $stmt->bindParam(':id', $idEspecialidad, PDO::PARAM_STR);
     $stmt->execute();
     $_SESSION['felicitaciones'] = 'Especialidad Editada Correctamente';
     header("Location: ../view/especialidad.php");

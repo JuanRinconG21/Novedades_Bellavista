@@ -397,6 +397,10 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                             action="../controller/editarProveedor.php">
                                                                             <div class="card-body">
                                                                                 <div class="form-group">
+                                                                                    <input type="text"
+                                                                                        name="idProveedor"
+                                                                                        value="<?php echo $key['idProveedor'] ?>"
+                                                                                        class="form-control" required>
                                                                                     <input type="text" name="proveedor"
                                                                                         value="<?php echo $key['nombre'] ?>"
                                                                                         class="form-control"
