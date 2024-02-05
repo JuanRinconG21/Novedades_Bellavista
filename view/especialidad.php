@@ -130,12 +130,17 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <!-- /.card-header -->
                                     <!-- form start -->
                                     <form method="post" action="../controller/agregarEspecialidad.php">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <input type="text" name="especialidad" class="form-control"
-                                                    id="exampleInputEmail1" placeholder="Ingrese la Especialidad"
-                                                    required>
-                                                <button type="submit" class="btn btn-success mt-3">Agregar</button>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="especialidad"><i class="fas fa-stethoscope"></i>
+                                                        Especialidad:</label>
+                                                    <input type="text" name="especialidad" class="form-control"
+                                                        id="especialidad" placeholder="Ingrese la Especialidad"
+                                                        required>
+                                                    <button type="submit" class="btn btn-success mt-3"><i
+                                                            class="fas fa-plus"></i> Agregar</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -329,7 +334,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Administradar Especialidades</h1>
+                            <h1 class="m-0">Administrar Especialidades</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -396,19 +401,26 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- form start -->
                                                                         <form method="post"
                                                                             action="../controller/editarEspecialidad.php">
-                                                                            <div class="card-body">
-                                                                                <div class="form-group">
-                                                                                    <input type="hidden"
-                                                                                        name="idEspecialidad"
-                                                                                        value="<?php echo $key['idEspecialidad'] ?>">
-                                                                                    <input type="text"
-                                                                                        name="especialidad"
-                                                                                        value="<?php echo $key['descripcion'] ?>"
-                                                                                        class="form-control"
-                                                                                        placeholder="Ingrese la Especialidad"
-                                                                                        required>
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-warning mt-3">Editar</button>
+                                                                            <div class="card">
+                                                                                <div class="card-body">
+                                                                                    <div class="form-group">
+                                                                                        <input type="hidden"
+                                                                                            name="idEspecialidad"
+                                                                                            value="<?php echo $key['idEspecialidad'] ?>">
+                                                                                        <label for="especialidad"><i
+                                                                                                class="fas fa-stethoscope"></i>
+                                                                                            Especialidad:</label>
+                                                                                        <input type="text"
+                                                                                            name="especialidad"
+                                                                                            value="<?php echo $key['descripcion'] ?>"
+                                                                                            class="form-control"
+                                                                                            placeholder="Ingrese la Especialidad"
+                                                                                            required>
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-warning mt-3"><i
+                                                                                                class="fas fa-edit"></i>
+                                                                                            Editar</button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </form>

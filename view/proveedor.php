@@ -130,11 +130,16 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <!-- /.card-header -->
                                     <!-- form start -->
                                     <form method="post" action="../controller/agregarProveedor.php">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <input type="text" name="proveedor" class="form-control"
-                                                    id="exampleInputEmail1" placeholder="Ingrese el Proveedor" required>
-                                                <button type="submit" class="btn btn-success mt-3">Agregar</button>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="proveedor"><i class="fas fa-truck"></i>
+                                                        Proveedor:</label>
+                                                    <input type="text" name="proveedor" class="form-control"
+                                                        id="proveedor" placeholder="Ingrese el Proveedor" required>
+                                                    <button type="submit" class="btn btn-success mt-3"><i
+                                                            class="fas fa-plus"></i> Agregar</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -328,7 +333,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Administradar Proveedores</h1>
+                            <h1 class="m-0">Administrar Proveedores</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -395,19 +400,28 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- form start -->
                                                                         <form method="post"
                                                                             action="../controller/editarProveedor.php">
-                                                                            <div class="card-body">
-                                                                                <div class="form-group">
-                                                                                    <input type="hidden"
-                                                                                        name="idProveedor"
-                                                                                        value="<?php echo $key['idProveedor'] ?>"
-                                                                                        class="form-control" required>
-                                                                                    <input type="text" name="proveedor"
-                                                                                        value="<?php echo $key['nombre'] ?>"
-                                                                                        class="form-control"
-                                                                                        placeholder="Ingrese El Proveedor"
-                                                                                        required>
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-warning mt-3">Editar</button>
+                                                                            <div class="card">
+                                                                                <div class="card-body">
+                                                                                    <div class="form-group">
+                                                                                        <input type="hidden"
+                                                                                            name="idProveedor"
+                                                                                            value="<?php echo $key['idProveedor'] ?>"
+                                                                                            class="form-control"
+                                                                                            required>
+                                                                                        <label for="proveedor"><i
+                                                                                                class="fas fa-truck"></i>
+                                                                                            Proveedor:</label>
+                                                                                        <input type="text"
+                                                                                            name="proveedor"
+                                                                                            value="<?php echo $key['nombre'] ?>"
+                                                                                            class="form-control"
+                                                                                            placeholder="Ingrese El Proveedor"
+                                                                                            required>
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-warning mt-3"><i
+                                                                                                class="fas fa-edit"></i>
+                                                                                            Editar</button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </form>

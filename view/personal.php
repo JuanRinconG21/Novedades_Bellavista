@@ -155,52 +155,63 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <!-- /.card-header -->
                                     <!-- form start -->
                                     <form method="post" action="../controller/agregarPersonal.php">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="cedula">Cédula:</label>
-                                                <input type="number" min="1" class="form-control" id="cedula"
-                                                    name="cedula" required>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="cedula"><i class="fas fa-id-card"></i>
+                                                            Cédula:</label>
+                                                        <input type="number" min="1" class="form-control" id="cedula"
+                                                            name="cedula" required>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
+                                                        <input type="text" class="form-control" id="nombre"
+                                                            name="nombre" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="apellido"><i class="fas fa-user"></i>
+                                                            Apellido:</label>
+                                                        <input type="text" class="form-control" id="apellido"
+                                                            name="apellido" required>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="telefono"><i class="fas fa-phone"></i>
+                                                            Teléfono:</label>
+                                                        <input type="tel" class="form-control" id="telefono"
+                                                            name="telefono" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="direccion"><i class="fas fa-map-marker-alt"></i>
+                                                        Dirección:</label>
+                                                    <input type="text" class="form-control" id="direccion"
+                                                        name="direccion" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="idCargo"><i class="fas fa-briefcase"></i>
+                                                        Especialidad:</label>
+                                                    <select class="form-control" name="idCargo" required>
+                                                        <?php
+                        $sql2 = "SELECT * FROM especialidad WHERE estado=0";
+                        $stmt2 = $pdo->prepare($sql2);
+                        $stmt2->execute();
+                        $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($fila2 as $key) {
+                    ?>
+                                                        <option value="<?php echo $key['idEspecialidad'] ?>">
+                                                            <?php echo $key['descripcion'] ?>
+                                                        </option>
+                                                        <?php
+                        }
+                    ?>
+                                                    </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-success"><i
+                                                        class="fas fa-plus"></i> Agregar</button>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="nombre">Nombre:</label>
-                                                <input type="text" class="form-control" id="nombre" name="nombre"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="apellido">Apellido:</label>
-                                                <input type="text" class="form-control" id="apellido" name="apellido"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="telefono">Teléfono:</label>
-                                                <input type="number" class="form-control" id="telefono" name="telefono"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="direccion">Direccion:</label>
-                                                <input type="text" class="form-control" id="direccion" name="direccion"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="idCargo">Especialidad:</label>
-                                                <select class="form-control" name="idCargo" required>
-                                                    <?php
-                                                    $sql2 = "SELECT * FROM especialidad WHERE estado=0";
-                                                    $stmt2 = $pdo->prepare($sql2);
-                                                    $stmt2->execute();
-                                                    $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                                                    foreach ($fila2 as $key) {
-                                                    ?>
-                                                    <!-- Aquí puedes insertar opciones dinámicamente desde tu base de datos o definirlas manualmente -->
-                                                    <option value="<?php echo $key['idEspecialidad'] ?>">
-                                                        <?php echo $key['descripcion'] ?></option>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                    <!-- Agrega más opciones según sea necesario -->
-                                                </select>
-                                            </div>
-                                            <button type=" submit" class="btn btn-success">Agregar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -469,76 +480,101 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- form start -->
                                                                         <form method="post"
                                                                             action="../controller/editarPersonal.php">
-                                                                            <div class="card-body">
-                                                                                <div class="form-group">
-                                                                                    <label for="cedula">Cédula:</label>
-                                                                                    <input type="number" min="1"
-                                                                                        value="<?php echo $key['idPersonal_Mantenimiento'] ?>"
-                                                                                        class="form-control" id="cedula"
-                                                                                        name="cedula" required>
+                                                                            <div class="card">
+                                                                                <div class="card-body">
+                                                                                    <div class="form-row">
+                                                                                        <div
+                                                                                            class="form-group col-md-6">
+                                                                                            <label for="cedula"><i
+                                                                                                    class="fas fa-id-card"></i>
+                                                                                                Cédula:</label>
+                                                                                            <input type="number"
+                                                                                                readonly
+                                                                                                value="<?php echo $key['idPersonal_Mantenimiento'] ?>"
+                                                                                                min="1"
+                                                                                                class="form-control"
+                                                                                                id="cedula"
+                                                                                                name="cedula" required>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="form-group col-md-6">
+                                                                                            <label for="nombre"><i
+                                                                                                    class="fas fa-user"></i>
+                                                                                                Nombre:</label>
+                                                                                            <input type="text"
+                                                                                                value="<?php echo $key['nombre'] ?>"
+                                                                                                class="form-control"
+                                                                                                id="nombre"
+                                                                                                name="nombre" required>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div
+                                                                                            class="form-group col-md-6">
+                                                                                            <label for="apellido"><i
+                                                                                                    class="fas fa-user"></i>
+                                                                                                Apellido:</label>
+                                                                                            <input type="text"
+                                                                                                value="<?php echo $key['apellido'] ?>"
+                                                                                                class="form-control"
+                                                                                                id="apellido"
+                                                                                                name="apellido"
+                                                                                                required>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="form-group col-md-6">
+                                                                                            <label for="telefono"><i
+                                                                                                    class="fas fa-phone"></i>
+                                                                                                Teléfono:</label>
+                                                                                            <input type="tel"
+                                                                                                value="<?php echo $key['telefono'] ?>"
+                                                                                                class="form-control"
+                                                                                                id="telefono"
+                                                                                                name="telefono"
+                                                                                                required>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="direccion"><i
+                                                                                                class="fas fa-map-marker-alt"></i>
+                                                                                            Dirección:</label>
+                                                                                        <input type="text"
+                                                                                            value="<?php echo $key['direccion'] ?>"
+                                                                                            class="form-control"
+                                                                                            id="direccion"
+                                                                                            name="direccion" required>
+                                                                                    </div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="idCargo"><i
+                                                                                                class="fas fa-briefcase"></i>
+                                                                                            Especialidad:</label>
+                                                                                        <select class="form-control"
+                                                                                            name="idCargo" required>
+                                                                                            <?php
+                        $sql2 = "SELECT * FROM especialidad WHERE estado=0";
+                        $stmt2 = $pdo->prepare($sql2);
+                        $stmt2->execute();
+                        $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($fila2 as $key) {
+                    ?>
+                                                                                            <option
+                                                                                                value="<?php echo $key['idEspecialidad'] ?>">
+                                                                                                <?php echo $key['descripcion'] ?>
+                                                                                            </option>
+                                                                                            <?php
+                        }
+                    ?>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-success"><i
+                                                                                            class="fas fa-plus"></i>
+                                                                                        Agregar</button>
                                                                                 </div>
-                                                                                <div class="form-group">
-                                                                                    <label for="nombre">Nombre:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control" id="nombre"
-                                                                                        name="nombre"
-                                                                                        value="<?php echo $key['nombre'] ?>"
-                                                                                        required>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label
-                                                                                        for="apellido">Apellido:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        value="<?php echo $key['apellido'] ?>"
-                                                                                        id="apellido" name="apellido"
-                                                                                        required>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label
-                                                                                        for="telefono">Teléfono:</label>
-                                                                                    <input type="number"
-                                                                                        value="<?php echo $key['telefono'] ?>"
-                                                                                        class="form-control"
-                                                                                        id="telefono" name="telefono"
-                                                                                        required>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label
-                                                                                        for="direccion">Direccion:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        id="direccion"
-                                                                                        value="<?php echo $key['telefono'] ?>"
-                                                                                        name="direccion" required>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label
-                                                                                        for="idCargo">Especialidad:</label>
-                                                                                    <select class="form-control"
-                                                                                        name="idCargo" required>
-                                                                                        <?php
-                                                    $sql2 = "SELECT * FROM especialidad WHERE estado=0";
-                                                    $stmt2 = $pdo->prepare($sql2);
-                                                    $stmt2->execute();
-                                                    $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                                                    foreach ($fila2 as $key) {
-                                                    ?>
-                                                                                        <!-- Aquí puedes insertar opciones dinámicamente desde tu base de datos o definirlas manualmente -->
-                                                                                        <option
-                                                                                            value="<?php echo $key['idEspecialidad'] ?>">
-                                                                                            <?php echo $key['descripcion'] ?>
-                                                                                        </option>
-                                                                                        <?php
-                                                    }
-                                                    ?>
-                                                                                        <!-- Agrega más opciones según sea necesario -->
-                                                                                    </select>
-                                                                                </div>
-                                                                                <button type=" submit"
-                                                                                    class="btn btn-success">Agregar</button>
                                                                             </div>
                                                                         </form>
+
+
                                                                     </div>
                                                                 </div>
                                                             </div>

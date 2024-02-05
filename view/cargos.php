@@ -137,11 +137,15 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <!-- /.card-header -->
                                     <!-- form start -->
                                     <form method="post" action="../controller/agregarCargo.php">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <input type="text" name="cargo" class="form-control"
-                                                    placeholder="Ingrese el Cargo" required>
-                                                <button type="submit" class="btn btn-success mt-3">Agregar</button>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="cargo"><i class="fas fa-briefcase"></i> Cargo:</label>
+                                                    <input type="text" name="cargo" class="form-control"
+                                                        placeholder="Ingrese el Cargo" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-success"><i
+                                                        class="fas fa-plus"></i> Agregar</button>
                                             </div>
                                         </div>
                                     </form>
@@ -335,7 +339,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Administradar Cargos</h1>
+                            <h1 class="m-0">Administrar Cargos</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -401,17 +405,25 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- form start -->
                                                                         <form method="post"
                                                                             action="../controller/editarCargo.php">
-                                                                            <div class="card-body">
-                                                                                <div class="form-group">
-                                                                                    <input type="hidden" name="idCargo"
-                                                                                        value="<?php echo $key['idCargos'] ?>">
-                                                                                    <input type="text" name="cargo"
-                                                                                        value="<?php echo $key['descripcion'] ?>"
-                                                                                        class="form-control"
-                                                                                        placeholder="Ingrese el Cargo"
-                                                                                        required>
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-warning mt-3">Editar</button>
+                                                                            <div class="card">
+                                                                                <div class="card-body">
+                                                                                    <div class="form-group">
+                                                                                        <label for="cargo"><i
+                                                                                                class="fas fa-briefcase"></i>
+                                                                                            Cargo:</label>
+                                                                                        <input type="hidden"
+                                                                                            name="idCargo"
+                                                                                            value="<?php echo $key['idCargos'] ?>">
+                                                                                        <input type="text" name="cargo"
+                                                                                            value="<?php echo $key['descripcion'] ?>"
+                                                                                            class="form-control"
+                                                                                            placeholder="Ingrese el Cargo"
+                                                                                            required>
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-warning mt-3"><i
+                                                                                                class="fas fa-edit"></i>
+                                                                                            Editar</button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </form>
