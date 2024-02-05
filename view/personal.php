@@ -3,7 +3,7 @@ session_start();
 include("../model/MySQL.php");
 $conexion = new MySQL();
 $pdo = $conexion->conectar();
-$sql = "SELECT personal_mantenimiento.idPersonal_Mantenimiento, personal_mantenimiento.nombre, especialidad.descripcion as 'especialidad' FROM personal_mantenimiento INNER JOIN especialidad ON personal_mantenimiento.Especialidad_idEspecialidad=especialidad.idEspecialidad WHERE personal_mantenimiento.estado=0";
+$sql = "SELECT personal_mantenimiento.idPersonal_Mantenimiento, personal_mantenimiento.nombre,personal_mantenimiento.apellido, personal_mantenimiento.telefono, personal_mantenimiento.direccion, especialidad.idEspecialidad, especialidad.descripcion FROM personal_mantenimiento INNER JOIN especialidad ON personal_mantenimiento.Especialidad_idEspecialidad = especialidad.idEspecialidad WHERE personal_mantenimiento.estado = 0";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -79,7 +79,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
     function eliminarPersonal(id) {
         Swal.fire({
-            title: `¿ Deseas Eliminar El Empleado #${id} ?`,
+            title: `¿ Deseas Eliminar El Personal #${id} ?`,
             showDenyButton: true,
             confirmButtonText: "Eliminar",
         }).then((result) => {
@@ -93,7 +93,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     function ejecutarControladorEliminar(id) {
         // Realizar una solicitud AJAX a tu controlador de eliminación en PHP
         $.ajax({
-            url: '../controller/eliminarEmpleado.php', // Ajusta la ruta a tu controlador PHP
+            url: '../controller/eliminarPersonal.php', // Ajusta la ruta a tu controlador PHP
             method: 'POST', // O el método que estés utilizando en tu controlador PHP
             data: {
                 id: id
@@ -154,7 +154,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="card card-primary">
                                     <!-- /.card-header -->
                                     <!-- form start -->
-                                    <form method="post" action="../controller/agregarEmpleado.php">
+                                    <form method="post" action="../controller/agregarPersonal.php">
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label for="cedula">Cédula:</label>
@@ -439,11 +439,11 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td><?php echo $key['apellido'] ?></td>
                                         <td><?php echo $key['telefono'] ?></td>
                                         <td><?php echo $key['direccion'] ?></td>
-                                        <td><?php echo $key['especialidad'] ?></td>
+                                        <td><?php echo $key['descripcion'] ?></td>
                                         <td><a class="btn btn-danger"
                                                 onclick="eliminarPersonal(<?php echo $key['idPersonal_Mantenimiento'] ?>)"><i
                                                     class="fas fa-trash-alt"></i></a> </td>
-                                        <td><a onclick="select(<?php echo $key['idCargos'] ?>,event)"
+                                        <td><a onclick="select(<?php echo $key['idPersonal_Mantenimiento'] ?>,event)"
                                                 class="btn btn-warning" data-toggle="modal"
                                                 data-target="#modal-default<?php echo $key['idPersonal_Mantenimiento'] ?>"><i
                                                     class="fas fa-edit"></i></a> </td>
@@ -453,7 +453,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h2 class="modal-title" style="font-weight: bold;">Editar
-                                                            Empleado
+                                                            Personal
                                                         </h2>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
@@ -468,14 +468,14 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <!-- /.card-header -->
                                                                         <!-- form start -->
                                                                         <form method="post"
-                                                                            action="../controller/editarEmpleado.php">
+                                                                            action="../controller/editarPersonal.php">
                                                                             <div class="card-body">
                                                                                 <div class="form-group">
                                                                                     <label for="cedula">Cédula:</label>
                                                                                     <input type="number" min="1"
+                                                                                        value="<?php echo $key['idPersonal_Mantenimiento'] ?>"
                                                                                         class="form-control" id="cedula"
-                                                                                        name="cedula" required readonly
-                                                                                        value="<?php echo $key['idUsuarios'] ?>">
+                                                                                        name="cedula" required>
                                                                                 </div>
                                                                                 <div class="form-group">
                                                                                     <label for="nombre">Nombre:</label>
@@ -490,26 +490,35 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                                         for="apellido">Apellido:</label>
                                                                                     <input type="text"
                                                                                         class="form-control"
+                                                                                        value="<?php echo $key['apellido'] ?>"
                                                                                         id="apellido" name="apellido"
-                                                                                        required
-                                                                                        value="<?php echo $key['apellido'] ?>">
+                                                                                        required>
                                                                                 </div>
                                                                                 <div class="form-group">
                                                                                     <label
                                                                                         for="telefono">Teléfono:</label>
-                                                                                    <input type="tel"
+                                                                                    <input type="number"
+                                                                                        value="<?php echo $key['telefono'] ?>"
                                                                                         class="form-control"
                                                                                         id="telefono" name="telefono"
-                                                                                        required
-                                                                                        value="<?php echo $key['telefono'] ?>">
+                                                                                        required>
                                                                                 </div>
                                                                                 <div class="form-group">
-                                                                                    <label for="idCargo">Cargo:</label>
+                                                                                    <label
+                                                                                        for="direccion">Direccion:</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="direccion"
+                                                                                        value="<?php echo $key['telefono'] ?>"
+                                                                                        name="direccion" required>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="idCargo">Especialidad:</label>
                                                                                     <select class="form-control"
-                                                                                        id="idSelect" name="idCargo"
-                                                                                        required>
+                                                                                        name="idCargo" required>
                                                                                         <?php
-                                                    $sql2 = "SELECT * FROM cargos WHERE estado=0";
+                                                    $sql2 = "SELECT * FROM especialidad WHERE estado=0";
                                                     $stmt2 = $pdo->prepare($sql2);
                                                     $stmt2->execute();
                                                     $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -517,7 +526,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     ?>
                                                                                         <!-- Aquí puedes insertar opciones dinámicamente desde tu base de datos o definirlas manualmente -->
                                                                                         <option
-                                                                                            value="<?php echo $key['idCargos'] ?>">
+                                                                                            value="<?php echo $key['idEspecialidad'] ?>">
                                                                                             <?php echo $key['descripcion'] ?>
                                                                                         </option>
                                                                                         <?php
