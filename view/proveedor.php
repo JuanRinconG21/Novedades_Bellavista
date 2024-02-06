@@ -338,7 +338,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="./inicio.php">Inicio</a></li>
-                                <li class="breadcrumb-item active">Proveedor</li>
+                                <li class="breadcrumb-item active">Proveedores</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -531,9 +531,6 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
             "lengthChange": false,
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print"],
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-            }
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,

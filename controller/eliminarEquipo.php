@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         include('../model/MySQL.php');
         $conexion = new MySQL();
         $pdo = $conexion->conectar();
-        $sql = "UPDATE especialidad SET estadoBorrado=1 WHERE idEquipos=:id";
+        $sql = "UPDATE equipos SET estadoBorrado=1 WHERE idEquipos=:id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_STR);
         $stmt->execute();

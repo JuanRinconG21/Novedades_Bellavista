@@ -6,6 +6,7 @@ isset($_POST['numeroSerie']) && !empty($_POST['numeroSerie'])
 isset($_POST['valor']) && !empty($_POST['valor']))
 {
     try {
+    $idEquipo = $_POST['idEquipos'];
     $nombre = $_POST['nombre'];
     $numeroSerie = $_POST['numeroSerie'];
     $fechaAdquisicion = $_POST['fechaAdquisicion'];
@@ -20,23 +21,10 @@ isset($_POST['valor']) && !empty($_POST['valor']))
     include('../model/MySQL.php');
     $conexion = new MySQL();
     $pdo = $conexion->conectar();
-    $sql = "SELECT * FROM equipos WHERE numeroSerie=:numeroSerie AND estadoBorrado = 0";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':numeroSerie', strtoupper($numeroSerie), PDO::PARAM_STR);
-    $stmt->execute();
-    if($stmt->rowCount() > 0){
-        $_SESSION['error'] = "Ya Existe ese Equipo con un Numero de Serie";
-        header("Location: ../view/equipo.php");
-    }else{
-        $sql = "SELECT * FROM equipos WHERE numeroSerie=:numeroSerie AND estadoBorrado = 1";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':numeroSerie', strtoupper($numeroSerie), PDO::PARAM_STR);
-        $stmt->execute();
-        
-        if ($stmt->rowCount()>0){
-            $sql = "UPDATE equipos SET nombre = :nombre, fechaAquisicion = :fechaAdqui, garantia = :garantia, ultimoMantenimiento = :fechaUltimo, valor = :precio, estado = :estado, Usuarios_idUsuarios = :usuario, Proveedor_idProveedor = :proveedor, estadoBorrado=0 WHERE equipos.numeroSerie = :numSerie";
+            $sql = "UPDATE equipos SET nombre = :nombre, fechaAquisicion = :fechaAdqui, garantia = :garantia, ultimoMantenimiento = :fechaUltimo, valor = :precio, estado = :estado, Usuarios_idUsuarios = :usuario, Proveedor_idProveedor = :proveedor, numeroSerie = :numSerie, estadoBorrado=0 WHERE idEquipos=:idEquipos";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':nombre', strtoupper($nombre), PDO::PARAM_STR);
+            $stmt->bindParam(':idEquipos', strtoupper($idEquipo), PDO::PARAM_STR);
             $stmt->bindParam(':numSerie', strtoupper($numeroSerie), PDO::PARAM_STR);
             $stmt->bindParam(':fechaAdqui', strtoupper($fechaAdquisicion), PDO::PARAM_STR);
             $stmt->bindParam(':garantia', strtoupper($garantia), PDO::PARAM_STR);
@@ -46,25 +34,8 @@ isset($_POST['valor']) && !empty($_POST['valor']))
             $stmt->bindParam(':usuario', strtoupper($usuario), PDO::PARAM_STR);
             $stmt->bindParam(':proveedor', strtoupper($proveedor), PDO::PARAM_STR);
             $stmt->execute();
-            $_SESSION['felicitaciones'] = 'Equipo Insertado Correctamente';
+            $_SESSION['felicitaciones'] = 'Equipo Editado Correctamente';
             header("Location: ../view/equipos.php"); 
-        }else{
-            $sql = "INSERT INTO `equipos` (idEquipos, nombre, numeroSerie, fechaAquisicion, garantia, ultimoMantenimiento, valor, estado, Usuarios_idUsuarios, Proveedor_idProveedor, estadoBorrado) VALUES (NULL, :nombre, :numSerie, :fechaAdqui, :garantia, :fechaUltimo, :precio, :estado, :usuario, :proveedor, 0);";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':nombre', strtoupper($nombre), PDO::PARAM_STR);
-            $stmt->bindParam(':numSerie', strtoupper($numeroSerie), PDO::PARAM_STR);
-            $stmt->bindParam(':fechaAdqui', strtoupper($fechaAdquisicion), PDO::PARAM_STR);
-            $stmt->bindParam(':garantia', strtoupper($garantia), PDO::PARAM_STR);
-            $stmt->bindParam(':fechaUltimo', strtoupper($ultimoMantenimiento), PDO::PARAM_STR);
-            $stmt->bindParam(':precio', $valor, PDO::PARAM_STR);
-            $stmt->bindParam(':estado', strtoupper($estado), PDO::PARAM_STR);
-            $stmt->bindParam(':usuario', strtoupper($usuario), PDO::PARAM_STR);
-            $stmt->bindParam(':proveedor', strtoupper($proveedor), PDO::PARAM_STR);
-            $stmt->execute();
-            $_SESSION['felicitaciones'] = 'Equipo Insertado Correctamente';
-            header("Location: ../view/equipos.php"); 
-        }
-    } 
     } catch (\Throwable $th) {
         echo $th;
         echo($nombre = $_POST['nombre']."</br></br>");
