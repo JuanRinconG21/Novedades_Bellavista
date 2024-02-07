@@ -231,7 +231,6 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <option value="0">Solucionado</option>
                                                     <option value="1">Pendiente de Verificación
                                                     </option>
-                                                    <option value="2">Errores de Software</option>
                                                     <option value="3">Cerrado</option>
                                                     <option value="4">No Solucionado</option>
                                                     <option value="5">Reprogramado</option>
@@ -253,7 +252,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
                                                 <select class="form-control" id="idEquipo" name="idEquipo" required>
                                                     <?php
-                                                $sql2 = "SELECT * FROM equipos";
+                                                $sql2 = "SELECT * FROM equipos  WHERE estadoBorrado=0";
                                                 $stmt2 = $pdo->prepare($sql2);
                                                 $stmt2->execute();
                                                 $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -274,7 +273,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <select class="form-control" id="personal_mantenimiento"
                                                     name="personal_mantenimiento" required>
                                                     <?php
-                                                    $sql3 = "SELECT * FROM personal_mantenimiento";
+                                                    $sql3 = "SELECT * FROM personal_mantenimiento WHERE estado=0";
                                                     $stmt3 = $pdo->prepare($sql3);
                                                     $stmt3->execute();
                                                     $fila3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
@@ -341,23 +340,13 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="../assets/img/Logo_Bellavista.jpg.jpeg" alt="AdminLTE Logo"
+                <img src="../assets/img/logo bellavista.jpg" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span style="font-size: 85%;" class="brand-text font-weight-light">INVERSIONES BELLAVISTA</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="../assets/img/Logo_Bellavista.jpg.jpeg" class="img-circle elevation-2"
-                            alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block"><?php echo $_SESSION['nombre'] ?></a>
-                    </div>
-                </div>
 
                 <!-- SidebarSearch Form -->
                 <div class="form-inline">
@@ -567,328 +556,139 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     <div class="card card-primary">
                                                                         <!-- /.card-header -->
                                                                         <!-- form start -->
-                                                                        <form method="post" action="">
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="nombre"><i
-                                                                                            class="fas fa-user"></i>
-                                                                                        Nombre:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control" id="nombre"
-                                                                                        name="nombre"
-                                                                                        value="<?php echo $key['nombre'] ?>"
-                                                                                        required readonly>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="numeroSerie"><i
-                                                                                            class="fas fa-barcode"></i>
-                                                                                        Número de Serie:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        id="numeroSerie"
-                                                                                        name="numeroSerie"
-                                                                                        value="<?php echo $key['numeroSerie'] ?>"
-                                                                                        required readonly>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="fechaAdquisicion"><i
-                                                                                            class="fas fa-calendar-alt"></i>
-                                                                                        Fecha de Adquisición:</label>
-                                                                                    <input type="date"
-                                                                                        value="<?php echo $key['fechaAquisicion'] ?>"
-                                                                                        class="form-control"
-                                                                                        id="fechaAdquisicion"
-                                                                                        name="fechaAdquisicion" required
-                                                                                        readonly>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="garantia"><i
-                                                                                            class="fas fa-shield-alt"></i>
-                                                                                        Garantía:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        id="garantia" name="garantia"
-                                                                                        value="<?php echo ($key['garantia'] == 0) ? 'Sí' : 'No' ?>"
-                                                                                        readonly>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="ultimoMantenimiento"><i
-                                                                                            class="fas fa-wrench"></i>
-                                                                                        Último Mantenimiento:</label>
-                                                                                    <input type="date"
-                                                                                        class="form-control"
-                                                                                        id="ultimoMantenimiento"
-                                                                                        name="ultimoMantenimiento"
-                                                                                        value="<?php echo $key['ultimoMantenimiento'] ?>"
-                                                                                        readonly>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="valor"><i
-                                                                                            class="fas fa-dollar-sign"></i>
-                                                                                        Valor:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control" id="valor"
-                                                                                        name="valor"
-                                                                                        value="<?php echo number_format($key['valor'],0,".",",")  ?>"
-                                                                                        required readonly>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="estado"><i
-                                                                                            class="fas fa-list-alt"></i>
-                                                                                        Estado:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control" id="estado"
-                                                                                        name="estado" value="<?php 
-                                                                                        $estado="";
-                                                                                        if($key['estado']== 0){
-                                                                                            $estado = "En Uso";
-                                                                                        }else if($key['estado']== 1){
-                                                                                            $estado = "En mantenimiento";
-                                                                                        }else if($key['estado']== 2){
-                                                                                            $estado = "En Desuso";
-                                                                                        }
-                                                                                        else if($key['estado']== 3){
-                                                                                            $estado = "En proceso de configuración";
-                                                                                        }
-                                                                                        else if($key['estado']== 4){
-                                                                                            $estado = "Retirado del inventario";
-                                                                                        }
-                                                                                        else if($key['estado']== 5){
-                                                                                            $estado = "Dañada";
-                                                                                        }
-                                                                                        else if($key['estado']== 7){
-                                                                                            $estado = "Apagado";
-                                                                                        } 
-                                                                                        echo $estado?>" readonly>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="usuario"><i
-                                                                                            class="fas fa-user"></i>
-                                                                                        Usuario:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        id="usuario" name="usuario"
-                                                                                        value="<?php echo($key['nombreUsuario']); ?>"
-                                                                                        readonly>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-group">
-                                                                                <label for="proveedor"><i
-                                                                                        class="fas fa-building"></i>
-                                                                                    Proveedor:</label>
-                                                                                <input type="text" class="form-control"
-                                                                                    id="proveedor" name="proveedor"
-                                                                                    value="<?php echo ($key['nombreProvee']); ?>"
-                                                                                    readonly>
-                                                                            </div>
-
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary"><i
-                                                                                    class="fas fa-save"></i>
-                                                                                Descargar Reporte</button>
-                                                                        </form>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button type="button" class="btn btn-default"
-                                                            data-dismiss="modal">Cerrar</button>
-                                                    </div>
-                                                </div>
-                                                <!-- /.modal-content -->
-                                            </div>
-                                        </div>
-                                        <div class="modal fade" id="modal-default<?php echo $key['idNovedades'] ?>">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h2 class="modal-title" style="font-weight: bold;">Editar
-                                                            Equipo
-                                                        </h2>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="container-fluid">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="card card-primary">
-                                                                        <!-- /.card-header -->
-                                                                        <!-- form start -->
                                                                         <form method="post"
-                                                                            action="../controller/editarEquipo.php">
-                                                                            <input type="hidden" class="form-control"
-                                                                                id="idEquipos" name="idEquipos"
-                                                                                value="<?php echo $key['idEquipos'] ?>"
-                                                                                required>
+                                                                            action="../controller/reporteNovedades.php">
                                                                             <div class="form-row">
                                                                                 <div class="form-group col-md-6">
-                                                                                    <label for="nombre"><i
-                                                                                            class="fas fa-user"></i>
-                                                                                        Nombre:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control" id="nombre"
-                                                                                        name="nombre"
-                                                                                        value="<?php echo $key['nombre'] ?>"
-                                                                                        required>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="numeroSerie"><i
-                                                                                            class="fas fa-barcode"></i>
-                                                                                        Número de
-                                                                                        Serie:</label>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        id="numeroSerie"
-                                                                                        name="numeroSerie"
-                                                                                        value="<?php echo $key['numeroSerie'] ?>"
-                                                                                        required>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="fechaAdquisicion"><i
+                                                                                    <label for="fechayHora"><i
                                                                                             class="fas fa-calendar-alt"></i>
-                                                                                        Fecha
-                                                                                        de Adquisición:</label>
-                                                                                    <input type="date" rea
-                                                                                        value="<?php echo $key['fechaAquisicion'] ?>"
+                                                                                        Fecha y
+                                                                                        Hora:</label>
+                                                                                    <input type="datetime-local"
                                                                                         class="form-control"
-                                                                                        id="fechaAdquisicion"
-                                                                                        name="fechaAdquisicion"
+                                                                                        id="fechayHora"
+                                                                                        value="<?php echo $key['fechayHora'] ?>"
+                                                                                        name="fechayHora" readonly
                                                                                         required>
                                                                                 </div>
                                                                                 <div class="form-group col-md-6">
-                                                                                    <label for="garantia"><i
-                                                                                            class="fas fa-shield-alt"></i>
-                                                                                        Garantía:</label>
-                                                                                    <select class="form-control"
-                                                                                        id="garantia" name="garantia"
-                                                                                        required>
-                                                                                        <option value="0">Sí</option>
-                                                                                        <option value="1">No</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="ultimoMantenimiento"><i
-                                                                                            class="fas fa-wrench"></i>
-                                                                                        Último
-                                                                                        Mantenimiento:</label>
-                                                                                    <input type="date"
+                                                                                    <label for="tipoNovedad"><i
+                                                                                            class="fas fa-info-circle"></i>
+                                                                                        Tipo de
+                                                                                        Novedad:</label>
+                                                                                    <input type="text"
                                                                                         class="form-control"
-                                                                                        id="ultimoMantenimiento"
-                                                                                        name="ultimoMantenimiento"
-                                                                                        value="<?php echo $key['ultimoMantenimiento'] ?>">
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="valor"><i
-                                                                                            class="fas fa-dollar-sign"></i>
-                                                                                        Valor:</label>
-                                                                                    <input type="number" va
-                                                                                        class="form-control" id="valor"
-                                                                                        name="valor"
-                                                                                        value="<?php echo $key['valor'] ?>"
-                                                                                        required>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="form-row">
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="estado"><i
-                                                                                            class="fas fa-list-alt"></i>
-                                                                                        Estado:</label>
-                                                                                    <select class="form-control"
-                                                                                        id="estado" name="estado"
-                                                                                        required>
-                                                                                        <option value="0">En uso
-                                                                                        </option>
-                                                                                        <option value="1">En
-                                                                                            mantenimiento</option>
-                                                                                        <option value="2">Desuso
-                                                                                        </option>
-                                                                                        <option value="3">En proceso de
-                                                                                            configuración</option>
-                                                                                        <option value="4">Retirado del
-                                                                                            inventario</option>
-                                                                                        <option value="5">Dañada
-                                                                                        </option>
-                                                                                        <option value="6">En Uso
-                                                                                        </option>
-                                                                                        <option value="7">Apagado
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="form-group col-md-6">
-                                                                                    <label for="usuario"><i
-                                                                                            class="fas fa-user"></i>
-                                                                                        Usuario:</label>
-                                                                                    <!-- Ejemplo de select con buscador -->
-                                                                                    <select class="form-control"
-                                                                                        id="usuario" name="usuario"
-                                                                                        required>
-                                                                                        <?php
-                                                      $sql2 = "SELECT * FROM usuarios WHERE estado=0";
-                                                      $stmt2 = $pdo->prepare($sql2);
-                                                      $stmt2->execute();
-                                                      $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                                                      foreach ($fila2 as $key) {
-                                                    ?>
-                                                                                        <option
-                                                                                            value="<?php echo $key['idUsuarios'] ?>">
-                                                                                            <?php echo $key['nombre']  ?>
-                                                                                        </option>
-
-                                                                                        <?php
-                                                    }
-                                                    ?>
-                                                                                        <!-- Agrega opciones según tus usuarios en la base de datos -->
-                                                                                    </select>
+                                                                                        value="<?php echo $key['tipoNovedad'] ?>"
+                                                                                        id="tipoNovedad"
+                                                                                        name="tipoNovedad" required
+                                                                                        readonly>
                                                                                 </div>
                                                                             </div>
 
                                                                             <div class="form-group">
-                                                                                <label for="proveedor"><i
-                                                                                        class="fas fa-building"></i>
-                                                                                    Proveedor:</label>
-                                                                                <!-- Ejemplo de select con buscador -->
-                                                                                <select class="form-control"
-                                                                                    id="proveedor" name="proveedor"
-                                                                                    required>
-                                                                                    <?php
-                                                      $sql3 = "SELECT * FROM proveedor WHERE estado=0";
-                                                      $stmt3 = $pdo->prepare($sql3);
-                                                      $stmt3->execute();
-                                                      $fila3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
-                                                      foreach ($fila3 as $key) {
-                                                    ?>
-                                                                                    <option
-                                                                                        value="<?php echo $key['idProveedor'] ?>">
-                                                                                        <?php echo $key['nombre'] ?>
-                                                                                    </option>
-                                                                                    <?php
-                                                    }
-                                                    ?>
-                                                                                    <!-- Agrega opciones según tus proveedores en la base de datos -->
-                                                                                </select>
+                                                                                <label for="descripcion"><i
+                                                                                        class="fas fa-comment"></i>
+                                                                                    Descripción:</label>
+                                                                                <textarea class="form-control"
+                                                                                    id="descripcion" name="descripcion"
+                                                                                    rows="3" required
+                                                                                    readonly><?php echo $key['descripcion'] ?></textarea>
+                                                                            </div>
+
+                                                                            <div class="form-row">
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label for="estadoIntervencion"><i
+                                                                                            class="fas fa-wrench"></i>
+                                                                                        Estado de
+                                                                                        Intervención:</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="estadoIntervencion"
+                                                                                        name="estadoIntervencion" value="<?php 
+                                                                                        /*
+                                                                                         <option value="0">Solucionado</option>
+                                                    <option value="1">Pendiente de Verificación
+                                                    </option>
+                                                    <option value="3">Cerrado</option>
+                                                    <option value="4">No Solucionado</option>
+                                                    <option value="5">Reprogramado</option>
+                                                    <option value="6">Aceptado por el Usuario</option>
+                                                                                         */
+                                                                                        $estadoF = "";
+                                                                                        if ( $key['estadoIntervencion'] == 0 ){
+                                                                                            $estadoF = "Solucionado";
+                                                                                        }else if ($key['estadoIntervencion'] == 1){
+                                                                                            $estadoF = "Pendiente de Verificación";
+                                                                                        }
+                                                                                        else if ($key['estadoIntervencion'] == 3){
+                                                                                            $estadoF = "Cerrado";
+                                                                                        }
+                                                                                        else if ($key['estadoIntervencion'] == 4){
+                                                                                            $estadoF = "No Solucionado";
+                                                                                        }
+                                                                                        else if ($key['estadoIntervencion'] == 5){
+                                                                                            $estadoF = "Reprogramado";
+                                                                                        }
+                                                                                        else if ($key['estadoIntervencion'] == 6){
+                                                                                            $estadoF = "Aceptado por el Usuario";
+                                                                                        }
+                                                                                        
+                                                                                        
+                                                                                        
+                                                                                        
+                                                                                        echo $estadoF ?>" required
+                                                                                        readonly>
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label for="recomendaciones"><i
+                                                                                            class="fas fa-lightbulb"></i>
+                                                                                        Recomendaciones:</label>
+                                                                                    <textarea class="form-control"
+                                                                                        id="recomendaciones"
+                                                                                        name="recomendaciones" rows="3"
+                                                                                        required
+                                                                                        readonly><?php echo $key['recomendaciones'] ?></textarea>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Aquí puedes agregar tus selects con las opciones que necesitas -->
+                                                                            <div class="form-row">
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label for="idEquipo"><i
+                                                                                            class="fas fa-laptop"></i>
+                                                                                        Equipo:</label>
+                                                                                    <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="idEquipo" name="idEquipo"
+                                                                                        required readonly
+                                                                                        value="<?php echo $key['nombreEquipo']." - ". $key['numeroSerie']?>">
+                                                                                </div>
+                                                                                <div class="form-group col-md-6">
+                                                                                    <label
+                                                                                        for="Personal_Mantenimiento_idPersonal_Mantenimiento"><i
+                                                                                            class="fas fa-tools"></i>
+                                                                                        Personal de
+                                                                                        Mantenimiento:</label>
+                                                                                    <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="Personal_Mantenimiento_idPersonal_Mantenimiento"
+                                                                                        name="Personal_Mantenimiento_idPersonal_Mantenimiento"
+                                                                                        required readonly
+                                                                                        value="<?php echo $key['nombrePersonal']." - ". $key['numeroSerie']?>">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group col-md-12">
+                                                                                <label
+                                                                                    for="Personal_Mantenimiento_idPersonal_Mantenimiento"><i
+                                                                                        class="fas fa-user"></i>
+                                                                                    Nombre de Quien Registro:</label>
+                                                                                <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
+                                                                                <input type="text" class="form-control"
+                                                                                    id="admin" name="admin" required
+                                                                                    readonly
+                                                                                    value="<?php echo $key['nombreAdmin']?>">
                                                                             </div>
 
                                                                             <button type="submit"
@@ -896,6 +696,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                                     class="fas fa-save"></i>
                                                                                 Guardar</button>
                                                                         </form>
+
                                                                     </div>
                                                                 </div>
                                                             </div>
