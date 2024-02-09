@@ -24,11 +24,12 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) && isset($_POST['pass'])
         header("Location: ../index.php"); 
     }
     } catch (\Throwable $th) {
-        echo $th;
+        $_SESSION['error'] = "Error Interno Contacte a Soporte";
+        header("Location: ../index.php"); 
     }
    
 }else{
     $_SESSION['error'] = "No deje Campos Vacios";
-        header("Location: ../index.php"); 
+    header("Location: ../index.php"); 
 }
 ?>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+if ( $_SESSION['session'] == true){
 include("../model/MySQL.php");
 $conexion = new MySQL();
 $pdo = $conexion->conectar();
@@ -7,6 +8,11 @@ $sql = "SELECT novedades.idNovedades, novedades.fechayHora, novedades.tipoNoveda
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$sql4 = "SELECT * FROM equipos WHERE estado=0";
+$stmt4 = $pdo->prepare($sql4);
+$stmt4->execute();
+$fila4 = $stmt4->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,8 +52,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <?php
-    if (isset($_SESSION['error'])) {
-    ?>
+	if (isset($_SESSION['error'])) {
+	?>
     <script>
     let msj = '<?php echo $_SESSION['error'] ?>'
     Swal.fire(
@@ -57,13 +63,13 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     )
     </script>
     <?php
-        unset($_SESSION['error']);
-    }
-    ?>
+		unset($_SESSION['error']);
+	}
+	?>
 
     <?php
-    if (isset($_SESSION['felicitaciones'])) {
-    ?>
+	if (isset($_SESSION['felicitaciones'])) {
+	?>
     <script>
     let msj = '<?php echo $_SESSION['felicitaciones'] ?>'
     Swal.fire(
@@ -73,13 +79,13 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     )
     </script>
     <?php
-        unset($_SESSION['felicitaciones']);
-    }
-    ?>
+		unset($_SESSION['felicitaciones']);
+	}
+	?>
     <script>
     function eliminarEquipo(id) {
         Swal.fire({
-            title: `¿ Deseas Eliminar El Equipo #${id} ?`,
+            title: `¿ Deseas Eliminar El \nEquipo #${id} ?`,
             showDenyButton: true,
             confirmButtonText: "Eliminar",
         }).then((result) => {
@@ -111,6 +117,43 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         });
     }
+
+
+    function cerrarSession() {
+        Swal.fire({
+            title: `¿Desea Cerrar Session?`,
+            showDenyButton: true,
+            confirmButtonText: "Si",
+            denyButtonText: "No"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                ejecutarControladorCerrarSession()
+            }
+        });
+    }
+
+    function ejecutarControladorCerrarSession() {
+        $.ajax({
+            url: '../controller/cerrasession.php', // Ajusta la ruta a tu controlador PHP
+            method: 'GET', // O el método que estés utilizando en tu controlador PHP
+            // Puedes enviar datos adicionales según tus necesidades
+            success: function(response) {
+                console.log(response);
+                // Manejar la respuesta del servidor después de la eliminación
+                Swal.fire("Cerrando Session...", "", "success");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500);
+            },
+            error: function(error) {
+                // Manejar errores, si es necesario
+                Swal.fire("Error", "", "error");
+            }
+        });
+    }
+
+
 
     function select(id, e) {
         // Obtener el id del valor que deseas preseleccionar
@@ -252,18 +295,18 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
                                                 <select class="form-control" id="idEquipo" name="idEquipo" required>
                                                     <?php
-                                                $sql2 = "SELECT * FROM equipos  WHERE estadoBorrado=0";
-                                                $stmt2 = $pdo->prepare($sql2);
-                                                $stmt2->execute();
-                                                $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                                                foreach ($fila2 as $key) {
-                                                    ?>
+												$sql2 = "SELECT * FROM equipos  WHERE estadoBorrado=0";
+												$stmt2 = $pdo->prepare($sql2);
+												$stmt2->execute();
+												$fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+												foreach ($fila2 as $key) {
+													?>
                                                     <option value="<?php echo $key['idEquipos'] ?>">
                                                         <?php echo $key['nombre'] ." - ". $key['numeroSerie']?>
                                                     </option>
                                                     <?php
-                                                    } 
-                                                    ?>
+													} 
+													?>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-6">
@@ -273,18 +316,18 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <select class="form-control" id="personal_mantenimiento"
                                                     name="personal_mantenimiento" required>
                                                     <?php
-                                                    $sql3 = "SELECT * FROM personal_mantenimiento WHERE estado=0";
-                                                    $stmt3 = $pdo->prepare($sql3);
-                                                    $stmt3->execute();
-                                                    $fila3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
-                                                    foreach ($fila3 as $key) {
-                                                        ?>
+													$sql3 = "SELECT * FROM personal_mantenimiento WHERE estado=0";
+													$stmt3 = $pdo->prepare($sql3);
+													$stmt3->execute();
+													$fila3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+													foreach ($fila3 as $key) {
+														?>
                                                     <option value="<?php echo $key['idPersonal_Mantenimiento'] ?>">
                                                         <?php echo $key['nombre'] ." - ". $key['apellido']?>
                                                     </option>
                                                     <?php
-                                                    }
-                                                    ?>
+													}
+													?>
                                                 </select>
                                             </div>
                                         </div>
@@ -292,6 +335,55 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>
                                             Guardar</button>
+                                    </form>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="modal-reporteEquipo">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="font-weight: bold;">Ver Reporte de Novedades </h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-primary">
+                                    <!-- /.card-header -->
+                                    <!-- form start -->
+                                    <form method="post" action="../controller/reporteNovedadesXequipo.php">
+                                        <div class="form-group">
+                                            <label for="selectCampo"><i class="fas fa-list-alt"></i> Seleccione el
+                                                Dispositivo Para Ver el Reporte</label>
+                                            <select class="form-control" id="idEquipo" name="idEquipo" required>
+                                                <?php
+                                                foreach ($fila4 as $key) {
+                                                ?>
+                                                <option value="<?php echo $key['idEquipos'] ?>">
+                                                    <?php echo $key['nombre']." - ".$key['numeroSerie'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>
+                                            Generar</button>
                                     </form>
 
 
@@ -339,7 +431,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="./inicio.php" class="brand-link">
                 <img src="../assets/img/logo bellavista.jpg" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span style="font-size: 85%;" class="brand-text font-weight-light">INVERSIONES BELLAVISTA</span>
@@ -375,7 +467,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">PERSONAS</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+			with font-awesome or any other icon font library -->
                         <li class="nav-item menu">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-user"></i>
@@ -401,7 +493,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">CARGOS</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+			with font-awesome or any other icon font library -->
                         <li class="nav-item menu">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-plus-square"></i>
@@ -445,7 +537,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">NOVEDADES</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+			with font-awesome or any other icon font library -->
                         <a href="./novedad.php" class="nav-link active">
                             <i class="nav-icon fas fa-exclamation-triangle"></i>
                             <p>
@@ -454,8 +546,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                         <li class="nav-header">CERRAR SESSION</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <a href="./novedad.php" class="nav-link">
+			with font-awesome or any other icon font library -->
+                        <a onclick="cerrarSession()" class="nav-link">
                             <i class="fas fa-sign-out-alt nav-icon"></i>
                             <p>
                                 SALIR
@@ -497,6 +589,9 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="button" data-toggle="modal" data-target="#modal-default"
                                 class="btn btn-success">Agregar <i style="margin-left: 5px;"
                                     class="fas fa-plus-circle"></i></button>
+                            <button type="button" data-toggle="modal" data-target="#modal-reporteEquipo"
+                                class="btn btn-primary">Reporte Por Equipo<i style="margin-left: 5px;"
+                                    class="fas fa-file-pdf"></i></button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -514,18 +609,18 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </thead>
                                 <tbody>
                                     <?php 
-              foreach ($fila as $key) {
-                /*
-                   <option value="0">En uso</option>
-                                                    <option value="1">En mantenimiento</option>
-                                                    <option value="2">Desuso</option>
-                                                    <option value="3">En proceso de configuración</option>
-                                                    <option value="4">Retirado del inventario</option>
-                                                    <option value="5">Dañada</option>
-                                                    <option value="7">Apagado</option> 
-                */
-                
-              ?>
+			foreach ($fila as $key) {
+				/*
+				<option value="0">En uso</option>
+													<option value="1">En mantenimiento</option>
+													<option value="2">Desuso</option>
+													<option value="3">En proceso de configuración</option>
+													<option value="4">Retirado del inventario</option>
+													<option value="5">Dañada</option>
+													<option value="7">Apagado</option> 
+				*/
+				
+			?>
                                     <tr>
                                         <td><?php echo $key['idNovedades'] ?></td>
                                         <td><?php echo $key['fechayHora'] ?></td>
@@ -541,7 +636,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h2 class="modal-title" style="font-weight: bold;">Ver
+                                                        <h2 class="modal-title" style="font-weight: bold;">
+                                                            Ver
                                                             Informacion
                                                         </h2>
                                                         <button type="button" class="close" data-dismiss="modal"
@@ -605,39 +701,38 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                                         class="form-control"
                                                                                         id="estadoIntervencion"
                                                                                         name="estadoIntervencion" value="<?php 
-                                                                                        /*
-                                                                                         <option value="0">Solucionado</option>
-                                                    <option value="1">Pendiente de Verificación
-                                                    </option>
-                                                    <option value="3">Cerrado</option>
-                                                    <option value="4">No Solucionado</option>
-                                                    <option value="5">Reprogramado</option>
-                                                    <option value="6">Aceptado por el Usuario</option>
-                                                                                         */
-                                                                                        $estadoF = "";
-                                                                                        if ( $key['estadoIntervencion'] == 0 ){
-                                                                                            $estadoF = "Solucionado";
-                                                                                        }else if ($key['estadoIntervencion'] == 1){
-                                                                                            $estadoF = "Pendiente de Verificación";
-                                                                                        }
-                                                                                        else if ($key['estadoIntervencion'] == 3){
-                                                                                            $estadoF = "Cerrado";
-                                                                                        }
-                                                                                        else if ($key['estadoIntervencion'] == 4){
-                                                                                            $estadoF = "No Solucionado";
-                                                                                        }
-                                                                                        else if ($key['estadoIntervencion'] == 5){
-                                                                                            $estadoF = "Reprogramado";
-                                                                                        }
-                                                                                        else if ($key['estadoIntervencion'] == 6){
-                                                                                            $estadoF = "Aceptado por el Usuario";
-                                                                                        }
-                                                                                        
-                                                                                        
-                                                                                        
-                                                                                        
-                                                                                        echo $estadoF ?>" required
-                                                                                        readonly>
+																						/*
+																						<option value="0">Solucionado</option>
+													<option value="1">Pendiente de Verificación
+													</option>
+													<option value="3">Cerrado</option>
+													<option value="4">No Solucionado</option>
+													<option value="5">Reprogramado</option>
+													<option value="6">Aceptado por el Usuario</option>
+																						 */
+																						$estadoF = "";
+																						if ( $key['estadoIntervencion'] == 0 ){
+																							$estadoF = "Solucionado";
+																						}else if ($key['estadoIntervencion'] == 1){
+																							$estadoF = "Pendiente de Verificación";
+																						}
+																						else if ($key['estadoIntervencion'] == 3){
+																							$estadoF = "Cerrado";
+																						}
+																						else if ($key['estadoIntervencion'] == 4){
+																							$estadoF = "No Solucionado";
+																						}
+																						else if ($key['estadoIntervencion'] == 5){
+																							$estadoF = "Reprogramado";
+																						}
+																						else if ($key['estadoIntervencion'] == 6){
+																							$estadoF = "Aceptado por el Usuario";
+																						}
+																						
+																						
+																						
+																						
+																						echo $estadoF ?>" required readonly>
                                                                                 </div>
                                                                                 <div class="form-group col-md-6">
                                                                                     <label for="recomendaciones"><i
@@ -676,14 +771,15 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                                         id="Personal_Mantenimiento_idPersonal_Mantenimiento"
                                                                                         name="Personal_Mantenimiento_idPersonal_Mantenimiento"
                                                                                         required readonly
-                                                                                        value="<?php echo $key['nombrePersonal']." - ". $key['numeroSerie']?>">
+                                                                                        value="<?php echo $key['nombrePersonal']?>">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group col-md-12">
                                                                                 <label
                                                                                     for="Personal_Mantenimiento_idPersonal_Mantenimiento"><i
                                                                                         class="fas fa-user"></i>
-                                                                                    Nombre de Quien Registro:</label>
+                                                                                    Nombre de Quien
+                                                                                    Registro:</label>
                                                                                 <!-- Ejemplo de select con opciones que debes llenar desde la base de datos -->
                                                                                 <input type="text" class="form-control"
                                                                                     id="admin" name="admin" required
@@ -713,8 +809,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     </tr>
                                     <?php
-              }
-              ?>
+			}
+			?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -826,3 +922,6 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+<?php 
+}else{ header("Location: ../index.php"); } 
+?>

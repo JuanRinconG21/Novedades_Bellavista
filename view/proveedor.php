@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+if ( $_SESSION['session'] == true){
 include("../model/MySQL.php");
 $conexion = new MySQL();
 $pdo = $conexion->conectar();
@@ -80,7 +80,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
     function eliminarProveedor(id) {
         Swal.fire({
-            title: `¿ Deseas Eliminar El Proveedor #${id} ?`,
+            title: `¿ Deseas Eliminar El \nProveedor #${id} ?`,
             showDenyButton: true,
             confirmButtonText: "Eliminar",
         }).then((result) => {
@@ -109,6 +109,40 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
             error: function(error) {
                 // Manejar errores, si es necesario
                 Swal.fire("Error al eliminar", "", "error");
+            }
+        });
+    }
+
+    function cerrarSession() {
+        Swal.fire({
+            title: `¿Desea Cerrar Session?`,
+            showDenyButton: true,
+            confirmButtonText: "Si",
+            denyButtonText: "No"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                ejecutarControladorCerrarSession()
+            }
+        });
+    }
+
+    function ejecutarControladorCerrarSession() {
+        $.ajax({
+            url: '../controller/cerrasession.php', // Ajusta la ruta a tu controlador PHP
+            method: 'GET', // O el método que estés utilizando en tu controlador PHP
+            // Puedes enviar datos adicionales según tus necesidades
+            success: function(response) {
+                console.log(response);
+                // Manejar la respuesta del servidor después de la eliminación
+                Swal.fire("Cerrando Session...", "", "success");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500);
+            },
+            error: function(error) {
+                // Manejar errores, si es necesario
+                Swal.fire("Error", "", "error");
             }
         });
     }
@@ -187,7 +221,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="./inicio.php" class="brand-link">
                 <img src="../assets/img/logo bellavista.jpg" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span style="font-size: 85%;" class="brand-text font-weight-light">INVERSIONES BELLAVISTA</span>
@@ -303,7 +337,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <li class="nav-header">CERRAR SESSION</li>
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <a href="./novedad.php" class="nav-link">
+                        <a onclick="cerrarSession()" class="nav-link">
                             <i class="fas fa-sign-out-alt nav-icon"></i>
                             <p>
                                 SALIR
@@ -536,3 +570,15 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+<?php 
+}else{
+    header("Location: ../index.php"); } 
+?>
+
+/*
+Necesito sacar un PDF que diga
+Reporte General de Novedades
+Equipo #XXXX
+Y haga una tabla con los siguientes datos que yo pueda recoger con una consulta SQL en PHP
+Identificador, Fecha y Hora, Tipo, Persona que Registra, Persona de Mantenimiento
+*/

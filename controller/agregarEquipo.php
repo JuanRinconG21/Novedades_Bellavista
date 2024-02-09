@@ -26,7 +26,7 @@ isset($_POST['valor']) && !empty($_POST['valor']))
     $stmt->execute();
     if($stmt->rowCount() > 0){
         $_SESSION['error'] = "Ya Existe ese Equipo con un Numero de Serie";
-        header("Location: ../view/equipo.php");
+        header("Location: ../view/equipos.php");
     }else{
         $sql = "SELECT * FROM equipos WHERE numeroSerie=:numeroSerie AND estadoBorrado = 1";
         $stmt = $pdo->prepare($sql);

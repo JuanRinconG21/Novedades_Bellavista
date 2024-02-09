@@ -1,5 +1,6 @@
 <?php
 session_start();
+if ( $_SESSION['session'] == true){
 include("../model/MySQL.php");
 $conexion = new MySQL();
 $pdo = $conexion->conectar();
@@ -79,7 +80,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
     function eliminarEmpleados(id) {
         Swal.fire({
-            title: `¿ Deseas Eliminar El Empleado #${id} ?`,
+            title: `¿ Deseas Eliminar El \nEmpleado #${id} ?`,
             showDenyButton: true,
             confirmButtonText: "Eliminar",
         }).then((result) => {
@@ -137,6 +138,40 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
         miSelect.options[final].selected = true
 
     };
+
+    function cerrarSession() {
+        Swal.fire({
+            title: `¿Desea Cerrar Session?`,
+            showDenyButton: true,
+            confirmButtonText: "Si",
+            denyButtonText: "No"
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                ejecutarControladorCerrarSession()
+            }
+        });
+    }
+
+    function ejecutarControladorCerrarSession() {
+        $.ajax({
+            url: '../controller/cerrasession.php', // Ajusta la ruta a tu controlador PHP
+            method: 'GET', // O el método que estés utilizando en tu controlador PHP
+            // Puedes enviar datos adicionales según tus necesidades
+            success: function(response) {
+                console.log(response);
+                // Manejar la respuesta del servidor después de la eliminación
+                Swal.fire("Cerrando Session...", "", "success");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500);
+            },
+            error: function(error) {
+                // Manejar errores, si es necesario
+                Swal.fire("Error", "", "error");
+            }
+        });
+    }
     </script>
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
@@ -189,15 +224,15 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <select class="form-control" name="idCargo" required>
                                                         <?php
                   $sql2 = "SELECT * FROM cargos WHERE estado=0";
-                  $stmt2 = $pdo->prepare($sql2);
-                  $stmt2->execute();
-                  $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                  foreach ($fila2 as $key) {
+                $stmt2 = $pdo->prepare($sql2);
+                $stmt2->execute();
+                $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($fila2 as $key) {
                 ?>
                                                         <option value="<?php echo $key['idCargos'] ?>">
                                                             <?php echo $key['descripcion'] ?></option>
                                                         <?php
-                  }
+                }
                 ?>
                                                     </select>
                                                 </div>
@@ -250,7 +285,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="./inicio.php" class="brand-link">
                 <img src="../assets/img/logo bellavista.jpg" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span style="font-size: 85%;" class="brand-text font-weight-light">INVERSIONES BELLAVISTA</span>
@@ -286,7 +321,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">PERSONAS</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+            with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-user"></i>
@@ -312,7 +347,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">CARGOS</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+            with font-awesome or any other icon font library -->
                         <li class="nav-item menu">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-plus-square"></i>
@@ -329,9 +364,9 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./proveedor.php" class="nav-link">
+                                    <a href="./especialidad.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Proveedor</p>
+                                        <p>Especialidad</p>
                                     </a>
                                 </li>
                             </ul>
@@ -356,7 +391,7 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
                         <li class="nav-header">NOVEDADES</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+            with font-awesome or any other icon font library -->
                         <a href="./novedad.php" class="nav-link">
                             <i class="nav-icon fas fa-exclamation-triangle"></i>
                             <p>
@@ -365,8 +400,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                         <li class="nav-header">CERRAR SESSION</li>
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <a href="./novedad.php" class="nav-link">
+            with font-awesome or any other icon font library -->
+                        <a onclick="cerrarSession()" class="nav-link">
                             <i class="fas fa-sign-out-alt nav-icon"></i>
                             <p>
                                 SALIR
@@ -424,8 +459,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </thead>
                                 <tbody>
                                     <?php 
-              foreach ($fila as $key) {
-              ?>
+            foreach ($fila as $key) {
+            ?>
                                     <tr>
                                         <td><?php echo $key['idUsuarios'] ?></td>
                                         <td><?php echo $key['nombre'] ?></td>
@@ -523,17 +558,17 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                                             required>
                                                                                             <?php
                   $sql2 = "SELECT * FROM cargos WHERE estado=0";
-                  $stmt2 = $pdo->prepare($sql2);
-                  $stmt2->execute();
-                  $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-                  foreach ($fila2 as $key) {
+                $stmt2 = $pdo->prepare($sql2);
+                $stmt2->execute();
+                $fila2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($fila2 as $key) {
                 ?>
                                                                                             <option
                                                                                                 value="<?php echo $key['idCargos'] ?>">
                                                                                                 <?php echo $key['descripcion'] ?>
                                                                                             </option>
                                                                                             <?php
-                  }
+                }
                 ?>
                                                                                         </select>
                                                                                     </div>
@@ -559,8 +594,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                     </tr>
                                     <?php
-              }
-              ?>
+            }
+            ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -671,3 +706,8 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+<?php
+}else{
+    header("Location: ../index.php"); 
+}
+?>

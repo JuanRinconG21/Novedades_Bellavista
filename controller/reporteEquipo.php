@@ -32,7 +32,7 @@ $pdf->AddPage();
 
 // Contenido del informe (reemplaza con tus datos)
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(0, 20, 'Informe PDF', 0, 1, 'C');
+$pdf->Cell(0, 20, 'Informe Sobre Equipo #'.$_POST['numeroSerie'], 0, 1, 'C');
 $pdf->Ln(30);
 
 // Datos del formulario
