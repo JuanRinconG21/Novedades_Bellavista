@@ -574,11 +574,3 @@ $fila = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }else{
     header("Location: ../index.php"); } 
 ?>
-
-/*
-Necesito sacar un PDF que diga
-Reporte General de Novedades
-Equipo #XXXX
-Y haga una tabla con los siguientes datos que yo pueda recoger con una consulta SQL en PHP
-Identificador, Fecha y Hora, Tipo, Persona que Registra, Persona de Mantenimiento
-*/
